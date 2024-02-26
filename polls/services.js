@@ -35,8 +35,25 @@ async function deletePollById(pollId) {
   }
 }
 
+// function to create a poll
+async function createPoll(pollData) {
+  try {
+    const result = await db
+      .getDB()
+      .collection(db.pollsCollection)
+      .insertOne(pollData);
+
+    // return new poll
+    return { _id: result.insertedId, ...pollData };
+  } catch (error) {
+    console.log(error);
+    throw new Error("Failed to create poll");
+  }
+}
+
 module.exports = {
   getPollById,
   getAllPolls,
   deletePollById,
+  createPoll,
 };
