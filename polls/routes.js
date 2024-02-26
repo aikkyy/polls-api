@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const services = require("./services");
+const schemas = require("./schemas");
 
 router.get("/", async (req, res) => {
   const polls = await services.getAllPolls();
@@ -39,6 +40,26 @@ router.get("/:id", async (req, res) => {
     res
       .status(500)
       .json({ error: "An error occurred while fetching poll details" });
+  }
+});
+
+// POST - endpoint to create a poll
+router.post("/", async (req, res) => {
+  const pollData = req.body;
+
+  // validate request body against schema
+  const { error, value } = schemas.createPollSchema.validate(pollData);
+  if (error) return res.status(400).json(error.details);
+  const { question, options } = value;
+
+  try {
+    const newPoll = await services.createPoll(value);
+
+    res.status(201).json(newPoll);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while creating the poll" });
   }
 });
 
