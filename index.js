@@ -3,8 +3,10 @@ const express = require("express");
 const db = require("./db/mongodb");
 const auth = require("./auth/routes");
 const polls = require("./polls/routes");
+const logger = require("pino-http");
 
 const app = express();
+app.use(logger());
 app.use(express.json());
 app.use("/auth", auth);
 app.use("/polls", polls);
