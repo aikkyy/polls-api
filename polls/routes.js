@@ -63,4 +63,20 @@ router.post("/", async (req, res) => {
   }
 });
 
+// POST - endpoint to vote in a poll's option
+router.put("/:id/vote", async (req, res) => {
+  const pollId = req.params.id;
+  const { error, value } = schemas.voteSchema.validate(req.body);
+  if (error) return res.status(400).json(error.details);
+
+  try {
+    const { option } = value;
+    await services.voteInOption(pollId, option);
+    res.json({ message: "Vote successfully cast" });
+  } catch (error) {
+    console.error("Error casting vote:", error);
+    res.status(500).json({ error: "An error occurred while voting in option" });
+  }
+});
+
 module.exports = router;
