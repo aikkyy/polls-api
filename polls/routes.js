@@ -51,7 +51,7 @@ router.post("/", auth, async (req, res) => {
   // validate request body against schema
   const { error, value } = schemas.createPollSchema.validate(pollData);
   if (error) return res.status(400).json(error.details);
-  const { question, options } = value;
+  const { question, options, deadline } = value;
 
   try {
     const newPoll = await services.createPoll(value);
@@ -71,6 +71,18 @@ router.put("/:id/vote", auth, async (req, res) => {
   if (error) return res.status(400).json(error.details);
 
   try {
+    const poll = await services.getPollById(pollId);
+
+    // if poll not found, return error
+    if (!poll) {
+      return res.status(404).json({ error: "Poll not found" });
+    }
+
+    // check if poll is still valid based on deadline
+    if (new Date(poll.deadline) < new Date()) {
+      return res.status(403).json({ error: "Voting period has ended" });
+    }
+
     const { option } = value;
     await services.voteInOption(pollId, option);
     res.json({ message: "Vote successfully cast" });
