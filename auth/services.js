@@ -27,9 +27,14 @@ async function findUserByEmail(email) {
   }
 }
 
+// updated function to create user
 async function createUser(newUserData) {
   try {
+    // add loginAttempts and isLocked to the user in database
+    newUserData.loginAttempts = 0;
+    newUserData.isLocked = false;
     newUserData.password = await hashPassword(newUserData.password);
+
     const inserted = await db
       .getDB()
       .collection(db.usersCollection)
@@ -70,6 +75,23 @@ function validateAccessToken(token) {
   }
 }
 
+async function updateUser(user) {
+  try {
+    const { _id, loginAttempts, isLocked } = user;
+    const updateResult = await db
+      .getDB()
+      .collection(db.usersCollection)
+      .updateOne(
+        { _id: db.toMongoID(_id) },
+        { $set: { loginAttempts, isLocked } }
+      );
+    return true;
+  } catch (error) {
+    console.error("Failed to update user:", error);
+    throw error;
+  }
+}
+
 module.exports = {
   findUserByID,
   findUserByEmail,
@@ -77,4 +99,5 @@ module.exports = {
   createUser,
   generateAccessToken,
   validateAccessToken,
+  updateUser,
 };
