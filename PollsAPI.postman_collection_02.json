@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "f4a3974a-e901-4c0e-9753-b43181e9af13",
+		"_postman_id": "8ab4366f-cf72-45c5-a00f-d2ff10e343eb",
 		"name": "Polls API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "15258912"
+		"_exporter_id": "33218928"
 	},
 	"item": [
 		{
@@ -105,6 +105,73 @@
 							"key": "id",
 							"value": ""
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get poll details",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "create poll",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"question\": \"uauauau\",\n    \"options\": [\"poured my dog a bowl of cereal\", \"put my wallet in the fridge\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3005/polls/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3005",
+					"path": [
+						"polls",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "vote in option",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"option\": \"poured my dog a bowl of cereal\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3005/polls/65dd0e9a47ee4c64181843d6/vote",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3005",
+					"path": [
+						"polls",
+						"65dd0e9a47ee4c64181843d6",
+						"vote"
 					]
 				}
 			},
