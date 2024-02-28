@@ -2,13 +2,14 @@ const express = require("express");
 const router = express.Router();
 const services = require("./services");
 const schemas = require("./schemas");
+const { auth } = require("../middleware");
 
 router.get("/", async (req, res) => {
   const polls = await services.getAllPolls();
   res.status(200).json(polls);
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   const pollId = req.params.id;
 
   const poll = await services.getPollById(pollId);
@@ -44,7 +45,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // POST - endpoint to create a poll
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   const pollData = req.body;
 
   // validate request body against schema
@@ -64,7 +65,7 @@ router.post("/", async (req, res) => {
 });
 
 // POST - endpoint to vote in a poll's option
-router.put("/:id/vote", async (req, res) => {
+router.put("/:id/vote", auth, async (req, res) => {
   const pollId = req.params.id;
   const { error, value } = schemas.voteSchema.validate(req.body);
   if (error) return res.status(400).json(error.details);
